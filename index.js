@@ -30,6 +30,22 @@ const client = new MongoClient(uri, {
 
 async function run() {
   try {
+    const collection = client.db("gardener-community").collection("gardeners");
+    const collection2 = client.db("gardener-community").collection("tip");
+
+    app.post("/gardeners", async (req, res) => {
+      const gardener = req.body;
+      const result = await collection.insertOne(gardener);
+      res.send(result);
+    });
+
+    app.get("/gardeners", async (req, res) => {
+      const result = await collection
+        .find({ status: "Active" })
+        .limit(6)
+        .toArray();
+      res.send(result);
+    });
 
     await client.connect();
     await client.db("admin").command({ ping: 1 });
