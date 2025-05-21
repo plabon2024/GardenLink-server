@@ -1,7 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const app = express();
-const { MongoClient, ServerApiVersion } = require("mongodb");
+const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 
 const port = process.env.PORT || 3000;
 
@@ -47,8 +47,7 @@ async function run() {
       res.send(result);
     });
     app.get("/allgardeners", async (req, res) => {
-      const result = await collection
-        .find().toArray();
+      const result = await collection.find().toArray();
       res.send(result);
     });
 
@@ -62,10 +61,18 @@ async function run() {
       res.send(result);
     });
     app.get("/alltip", async (req, res) => {
-      const result = await collection2.find({Availability:"Public"}).toArray();
+      const result = await collection2
+        .find({ Availability: "Public" })
+        .toArray();
       res.send(result);
     });
 
+    app.get("/tipdetails/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id:new ObjectId(id) };
+      const result = await collection2.findOne(query);
+      res.send(result);
+    });
     await client.connect();
     await client.db("admin").command({ ping: 1 });
     console.log(
