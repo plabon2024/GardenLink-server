@@ -46,6 +46,11 @@ async function run() {
         .toArray();
       res.send(result);
     });
+    app.get("/allgardeners", async (req, res) => {
+      const result = await collection
+        .find().toArray();
+      res.send(result);
+    });
 
     app.post("/tip", async (req, res) => {
       const tip = req.body;
@@ -54,6 +59,10 @@ async function run() {
     });
     app.get("/tip", async (req, res) => {
       const result = await collection2.limit(6).toArray();
+      res.send(result);
+    });
+    app.get("/alltip", async (req, res) => {
+      const result = await collection2.find({Availability:"Public"}).toArray();
       res.send(result);
     });
 
