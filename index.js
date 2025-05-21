@@ -47,6 +47,16 @@ async function run() {
       res.send(result);
     });
 
+    app.post("/tip", async (req, res) => {
+      const tip = req.body;
+      const result = await collection2.insertOne(tip);
+      res.send(result);
+    });
+    app.get("/tip", async (req, res) => {
+      const result = await collection2.limit(6).toArray();
+      res.send(result);
+    });
+
     await client.connect();
     await client.db("admin").command({ ping: 1 });
     console.log(
