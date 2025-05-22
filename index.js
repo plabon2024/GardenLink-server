@@ -82,6 +82,20 @@ async function run() {
       res.send(result);
     });
 
+        app.put("/mytips/:id", async (req, res) => {
+      const id = req.params.id;
+      const filter = { _id: new ObjectId(id) };
+
+      const options = { upsert: true };
+
+      const upldatedtip = req.body;
+      const upldatedDoc = {
+        $set: upldatedtip,
+      };
+      const result = await collection2.updateOne(filter, upldatedDoc, options);
+      res.send(result);
+    });
+
     await client.connect();
     await client.db("admin").command({ ping: 1 });
     console.log(
