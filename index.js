@@ -57,7 +57,7 @@ async function run() {
       res.send(result);
     });
     app.get("/tip", async (req, res) => {
-      const result = await collection2.limit(6).toArray();
+      const result = await collection2.find().limit(6).toArray();
       res.send(result);
     });
     app.get("/alltip", async (req, res) => {
@@ -73,6 +73,15 @@ async function run() {
       const result = await collection2.findOne(query);
       res.send(result);
     });
+
+    app.get("/mytips/:email", async (req, res) => {
+      const email = req.params.email;
+    
+      const result = await collection2.find({ email })
+        .toArray();
+      res.send(result);
+    });
+
     await client.connect();
     await client.db("admin").command({ ping: 1 });
     console.log(
