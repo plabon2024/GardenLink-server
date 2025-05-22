@@ -69,20 +69,19 @@ async function run() {
 
     app.get("/tipdetails/:id", async (req, res) => {
       const id = req.params.id;
-      const query = { _id:new ObjectId(id) };
+      const query = { _id: new ObjectId(id) };
       const result = await collection2.findOne(query);
       res.send(result);
     });
 
     app.get("/mytips/:email", async (req, res) => {
       const email = req.params.email;
-    
-      const result = await collection2.find({ email })
-        .toArray();
+
+      const result = await collection2.find({ email }).toArray();
       res.send(result);
     });
 
-        app.put("/mytips/:id", async (req, res) => {
+    app.put("/mytips/:id", async (req, res) => {
       const id = req.params.id;
       const filter = { _id: new ObjectId(id) };
 
@@ -93,6 +92,13 @@ async function run() {
         $set: upldatedtip,
       };
       const result = await collection2.updateOne(filter, upldatedDoc, options);
+      res.send(result);
+    });
+
+    app.delete("/delete/:id", async (req, res) => {
+      const id = req.params.id;
+      const quary = { _id: new ObjectId(id) };
+      const result = await collection2.deleteOne(quary);
       res.send(result);
     });
 
