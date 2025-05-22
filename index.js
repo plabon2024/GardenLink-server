@@ -95,6 +95,24 @@ async function run() {
       res.send(result);
     });
 
+    app.put("/toggle-like/:id", async (req, res) => {
+      const itemId = req.params.id;
+      const userEmail = req.body.email;
+      const item = await collection2.findOne({ _id: new ObjectId(itemId) });
+
+      const isLiked = item.likedBy?.includes(userEmail);
+
+      const updateQuery = isLiked
+        ? { $pull: { likedBy: userEmail } }
+        : { $addToSet: { likedBy: userEmail } }; 
+
+      const result = await collection2.updateOne(
+        { _id: new ObjectId(itemId) },
+        updateQuery
+      );
+      res.send(result);
+    });
+
     app.delete("/delete/:id", async (req, res) => {
       const id = req.params.id;
       const quary = { _id: new ObjectId(id) };
