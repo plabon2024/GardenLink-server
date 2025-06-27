@@ -32,6 +32,7 @@ async function run() {
   try {
     const collection = client.db("gardener-community").collection("gardeners");
     const collection2 = client.db("gardener-community").collection("tip");
+    const collectionmail = client.db("gardener-community").collection("mail");
 
     app.post("/gardeners", async (req, res) => {
       const gardener = req.body;
@@ -45,6 +46,16 @@ async function run() {
         .limit(6)
         .toArray();
       res.send(result);
+    });
+    app.post("/email", async (req, res) => {
+      const email = req.body
+      const result = await collectionmail.insertOne(email)
+      if (result.insertedId) {
+      res.status(200).json({
+        success: true,
+        message: "Subscription successful",
+      });
+    }
     });
     app.get("/allgardeners", async (req, res) => {
       const result = await collection.find().toArray();
@@ -104,7 +115,7 @@ async function run() {
 
       const updateQuery = isLiked
         ? { $pull: { likedBy: userEmail } }
-        : { $addToSet: { likedBy: userEmail } }; 
+        : { $addToSet: { likedBy: userEmail } };
 
       const result = await collection2.updateOne(
         { _id: new ObjectId(itemId) },
